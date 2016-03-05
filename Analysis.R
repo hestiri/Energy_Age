@@ -1,29 +1,79 @@
 source("READ.R")
 
-##LMs
+#Building formulas
+age <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+                  age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
+                  age60to64+age65to69+age70to74+age75to79+age80p"
+)
+age_climate <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+                          age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
+                          age60to64+age65to69+age70to74+age75to79+age80p+
+                          HDD65+CDD65"
+)
+age_climate_econ <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+                               age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
+                               age60to64+age65to69+age70to74+age75to79+age80p+
+                               HDD65+CDD65+
+                               inc10"
+)
+age_climate_econ_housing <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+                                       age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
+                                       age60to64+age65to69+age70to74+age75to79+age80p+
+                                       HDD65+CDD65+
+                                       inc10+
+                                       TYPEHUQ+HOMEAREA+YEARMADE10"
+)
 
-##1987
-fit87 <- lm(d87$BTUTOT~d87$age5+d87$age5to9+d87$age10to14+d87$age15to19+d87$age20to24+d87$age25to29+d87$age30to34+d87$age35to39+d87$age40to44+d87$age45to49+
-              d87$age50to54+d87$age55to59+d87$age60to64+d87$age65to69+d87$age70to74+d87$age75to79+d87$age80to84+d87$age85+d87$HDD65+d87$CDD65+d87$YEARMADE+
-              d87$ONEYPY+d87$TYPEHU+d87$HOMEAREA+d87$NHSLDMEM)
-summary(fit87)
-ages87<- fit87$coefficients[2:19]
-barplot(ages87)
 
 
-##1990
-fit90 <- lm(d90$BTUTOT~d90$age5+d90$age5to9+d90$age10to14+d90$age15to19+d90$age20to24+d90$age25to29+d90$age30to34+d90$age35to39+d90$age40to44+d90$age45to49+
-              d90$age50to54+d90$age55to59+d90$age60to64+d90$age65to69+d90$age70to74+d90$age75to79+d90$age80to84+d90$age85+d90$HDD65+d90$CDD65+d90$YEARMADE+
-              d90$MONEYPY+d90$TYPEHUQ+d90$YEARMADE+d90$NHSLDMEM)
-summary(fit90)
-ages90<- fit90$coefficients[2:19]
-barplot(ages90)
+## a function for running the models and storing the results
+model <- function(x, y) {
+fit <- lm(x) 
+N<- dim(summary(fit)$coefficients)[1]-1
+RES <- c(1:N)
+RES <- as.data.frame(RES)
+RES$Var <- names(fit$coefficients[-1])
+RES$Coef <- summary(fit)$coefficients[-1,1]
+RES$upper <- RES$Coef+summary(fit)$coefficients[-1,2]
+RES$lower <- RES$Coef-summary(fit)$coefficients[-1,2]
+RES$YEAR <- y
+RES$MDL <- x 
+RES
+}
+
+## running the models and storing the results
+attach(d87)
+out1 <- model("age",1987)
+out2 <- model("age_climate",1987)
+out3 <- model("age_climate_econ",1987)
+out4 <- model("age_climate_econ_housing",1987)
+detach(d87)
+attach(d90)
+out5 <- model("age",1990)
+out6 <- model("age_climate",1990)
+out7 <- model("age_climate_econ",1990)
+out8 <- model("age_climate_econ_housing",1990)
+detach(d90)
+attach(d09)
+out9 <- model("age",2009)
+out10 <- model("age_climate",2009)
+out11 <- model("age_climate_econ",2009)
+out12 <- model("age_climate_econ_housing",2009)
+detach(d09)
+
+## joining the results
+OUTPUT <- rbind(out1,out2,out3,out4,out5,out6,out7,out8,out9,out10,out11,out12)
+rm(out1,out2,out3,out4,out5,out6,out7,out8,out9,out10,out11,out12)
+
+##LEt's plot'em out!
+ggplot()+geom_point(data=OUTPUT, aes(x=Var, y=Coef, fill = MDL))+
+  facet_wrap(~ YEAR)
 
 
-##2009
-fit09 <- lm(d09$TOTALBTU~d09$age5+d09$age5to9+d09$age10to14+d09$age15to19+d09$age20to24+d09$age25to29+d09$age30to34+d09$age35to39+d09$age40to44+d09$age45to49+
-              d09$age50to54+d09$age55to59+d09$age60to64+d09$age65to69+d09$age70to74+d09$age75to79+d09$age80to84+d09$age85+d09$HDD65+d09$CDD65+d09$YEARMADE+
-              d09$MONEYPY+d09$TOTSQFT+d09$NHSLDMEM)
-summary(fit09)
-ages09<- fit09$coefficients[2:19]
-barplot(ages09)
+
+
+
+
+
+
+
