@@ -1,22 +1,22 @@
 source("READ.R")
 
 #Building formulas
-age <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+age <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                   age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                   age60to64+age65to69+age70to74+age75to79+age80p"
 )
-age_climate <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+age_climate <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                           age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                           age60to64+age65to69+age70to74+age75to79+age80p+
                           HDD65+CDD65"
 )
-age_climate_econ <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+age_climate_econ <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                age60to64+age65to69+age70to74+age75to79+age80p+
                                HDD65+CDD65+
                                inc10"
 )
-age_climate_econ_housing <- as.formula("BTUTOT~age5+age5to9+age10to14+age15to19+age20to24+age25to29+
+age_climate_econ_housing <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                        age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                        age60to64+age65to69+age70to74+age75to79+age80p+
                                        HDD65+CDD65+
