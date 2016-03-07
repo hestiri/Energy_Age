@@ -54,8 +54,8 @@ d87$BTUTOT <- d87$BTUKER+d87$BTUEL+d87$BTUNG+d87$BTUFO+d87$BTUNG+d87$BTULP
 d87$MONEYPY <- d87$ONEYPY
 
 ##Create count columns
-d87$age5 <- rowSums(d87[,10:21]<5 & d87[,10:21]>0) #<5 years olds
-d87$age5to9 <- rowSums(d87[,10:21]>4 & d87[,10:21]<10) #5-9 years olds
+d87$age05 <- rowSums(d87[,10:21]<5 & d87[,10:21]>0) #<5 years olds
+d87$age05to09 <- rowSums(d87[,10:21]>4 & d87[,10:21]<10) #5-9 years olds
 d87$age10to14 <- rowSums(d87[,10:21]>9 & d87[,10:21]<15) #10-14 years olds
 d87$age15to19 <- rowSums(d87[,10:21]>14 & d87[,10:21]<20) #15-19 years olds
 d87$age20to24 <- rowSums(d87[,10:21]>19 & d87[,10:21]<25) #20-24 years olds
@@ -100,7 +100,7 @@ d87$YEAR <- 1987
 #harmonizing data model for join
 d87 <- d87 %>%
   select(HHID,REGIONC,DIVISION,YEAR,YEARMADE10,TYPEHUQ,HOMEAREA,CDD65,HDD65,HHSEX,NHSLDMEM,inc10,MONEYPY,NWEIGHT,BTUKER,BTUEL,BTUNG,BTUFO,BTULP,BTUTOT,
-         age5,age5to9,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
+         age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
   )
 
 #####
@@ -152,8 +152,8 @@ d90 <- subset(d90, d90$HHID != 1)
 
 
 ##Create count columns
-d90$age5 <- rowSums(d90[,8:19]<5 & d90[,8:19] > 0) #<5 years olds
-d90$age5to9 <- rowSums(d90[,8:19]>4 & d90[,8:19]<10) #5-9 years olds
+d90$age05 <- rowSums(d90[,8:19]<5 & d90[,8:19] > 0) #<5 years olds
+d90$age05to09 <- rowSums(d90[,8:19]>4 & d90[,8:19]<10) #5-9 years olds
 d90$age10to14 <- rowSums(d90[,8:19]>9 & d90[,8:19]<15) #10-14 years olds
 d90$age15to19 <- rowSums(d90[,8:19]>14 & d90[,8:19]<20) #15-19 years olds
 d90$age20to24 <- rowSums(d90[,8:19]>19 & d90[,8:19]<25) #20-24 years olds
@@ -199,7 +199,7 @@ d90$YEAR <- 1990
 #harmonizing data model for join
 d90 <- d90 %>%
   select(HHID,REGIONC,DIVISION,YEAR,YEARMADE10,TYPEHUQ,HOMEAREA,CDD65,HDD65,HHSEX,NHSLDMEM,inc10,MONEYPY,NWEIGHT,BTUKER,BTUEL,BTUNG,BTUFO,BTULP,BTUTOT,
-         age5,age5to9,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
+         age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
   )
 
 #####
@@ -263,8 +263,8 @@ d09$HHAGE <- ifelse(d09$HHAGE > 79, 17,d09$HHAGE )
 
 ##Create count columns
 
-d09$age5 <- rowSums(d09[,8:21]==1) #<5 years olds
-d09$age5to9 <- rowSums(d09[,8:21]==2) #5-9 years olds
+d09$age05 <- rowSums(d09[,8:21]==1) #<5 years olds
+d09$age05to09 <- rowSums(d09[,8:21]==2) #5-9 years olds
 d09$age10to14 <- rowSums(d09[,8:21]==3) #10-14 years olds
 d09$age15to19 <- rowSums(d09[,8:21]==4) #15-19 years olds
 d09$age20to24 <- rowSums(d09[,8:21]==5) #20-24 years olds
@@ -299,7 +299,7 @@ names(d09)
 
 d09 <- d09 %>%
   select(HHID,REGIONC,DIVISION,YEAR,YEARMADE10,TYPEHUQ,HOMEAREA,CDD65,HDD65,HHSEX,NHSLDMEM,inc10,MONEYPY,NWEIGHT,BTUKER,BTUEL,BTUNG,BTUFO,BTULP,BTUTOT,
-         age5,age5to9,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
+         age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
   )
 
 
