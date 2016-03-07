@@ -10,24 +10,35 @@ Ages <- subset(OUTPUT, OUTPUT$Var %in% c("age05","age05to09","age10to14","age15t
 
 
 
-ggplot()+geom_point(data=Ages, aes(x=Var, y=Coef, fill = MDL))+
-  facet_wrap(~ YEAR)
 
 
 
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Coef)) + facet_grid(YEAR~ MDL)  + labs(title =" New title", x = "New x", y = "New y") 
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL)   + labs(title =" New title", x = "New x", y = "New y") 
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Coef)) + 
+  facet_grid(YEAR~ MDL)  + labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation")
 
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + facet_grid(YEAR~ MDL)  + labs(title =" New title", x = "New x", y = "New y") + coord_polar(theta = "x", direction=1 )
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
+  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation") 
+
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + 
+  facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation") + 
+  coord_polar(theta = "x", direction=1 ) + theme(legend.position='none')
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
+  labs(title =" New title", x = "Age Group", y = "Estimated Correlation") + coord_polar(theta = "x", direction=1 )
 
 
 
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot() + facet_wrap(~ MDL) + labs(title =" New title", x = "New x", y = "New y") 
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot(fill = "gray") + facet_wrap(~ YEAR) + labs(title =" New title", x = "New x", y = "New y") 
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot() + facet_wrap(~ MDL) + 
+  labs(title ="Coefficient estimates by model", x = "Age Group", y = "Estimated Correlation") 
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot(fill = "gray") + facet_wrap(~ YEAR) + 
+  labs(title =" New title", x = x = "Age Group", y = "Estimated Correlation") 
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot(fill = "gray") + facet_wrap(~ YEAR) + 
+  labs(title =" New title", x = x = "Age Group", y = "Estimated Correlation") + coord_polar(theta = "x", direction=1 )
 
 
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_errorbar() + facet_grid(YEAR~ MDL)   + labs(title =" New title", x = "New x", y = "New y") 
+ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_errorbar() + 
+  facet_grid(YEAR~ MDL)   + labs(title =" New title", x = "Age Group", y = "Estimated Correlation") 
 
 
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() + facet_grid(YEAR~ MDL)  + labs(title =" New title", x = "New x", y = "New y") 
+ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() + 
+  facet_grid(YEAR~ MDL)  + labs(title =" New title", x = "Age Group", y = "Estimated Correlation") 
 
