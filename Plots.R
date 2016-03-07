@@ -9,10 +9,9 @@ Ages <- subset(OUTPUT, OUTPUT$Var %in% c("age05","age05to09","age10to14","age15t
                                          "age60to64","age65to69","age70to74","age75to79","age80p"))
 
 
-
-
-
-
+##########
+######
+######## AGE PLOTS
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Coef)) + 
   facet_grid(YEAR~ MDL)  + labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation")
 
@@ -22,23 +21,36 @@ ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + 
   facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation") + 
   coord_polar(theta = "x", direction=1 ) + theme(legend.position='none')
+
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
   labs(title =" New title", x = "Age Group", y = "Estimated Correlation") + coord_polar(theta = "x", direction=1 )
 
 
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot() + facet_wrap(~ MDL) + 
-  labs(title ="Coefficient estimates by model", x = "Age Group", y = "Estimated Correlation") 
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot(fill = "gray") + facet_wrap(~ YEAR) + 
-  labs(title =" New title", x = x = "Age Group", y = "Estimated Correlation") 
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot(fill = "gray") + facet_wrap(~ YEAR) + 
-  labs(title =" New title", x = x = "Age Group", y = "Estimated Correlation") + coord_polar(theta = "x", direction=1 )
+  labs(title ="Coefficient estimates by model", x = "Age Group", y = "Estimated Correlation")
+
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot() + facet_wrap(~ YEAR) + 
+  labs(title ="Coefficient estimates by age", x = "Age Group", y = "Estimated Correlation")
+
 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_errorbar() + 
-  facet_grid(YEAR~ MDL)   + labs(title =" New title", x = "Age Group", y = "Estimated Correlation") 
+  facet_grid(YEAR~ MDL)   + labs(title ="Coefficient error bars by year and model", x = "Age Group", y = "Estimated Correlation") 
 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() + 
-  facet_grid(YEAR~ MDL)  + labs(title =" New title", x = "Age Group", y = "Estimated Correlation") 
+  facet_grid(YEAR~ MDL)  + labs(title ="Coefficient estimate ranges by year and model", x = "Age Group", y = "Estimated Correlation") 
+
+
+
+##now lookin at only non-age variables:
+
+NAges <- subset(OUTPUT, OUTPUT$Var %in% c("HDD65","CDD65","inc10","TYPEHUQ","HOMEAREA","YEARMADE10"))
+
+
+### NAges PLOTS
+ggplot(NAges, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
+  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation") 
+
 
