@@ -13,34 +13,34 @@ Ages <- subset(OUTPUT, OUTPUT$Var %in% c("age05","age05to09","age10to14","age15t
 ######
 ######## AGE PLOTS
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Coef)) + 
-  facet_grid(YEAR~ MDL)  + labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation")
+  facet_grid(YEAR~ MDL)  + labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient")
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
-  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation") 
+  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + 
-  facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation") + 
+  facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") + 
   coord_polar(theta = "x", direction=1 ) + theme(legend.position='none')
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
-  labs(title =" New title", x = "Age Group", y = "Estimated Correlation") + coord_polar(theta = "x", direction=1 )
+  labs(title =" New title", x = "Age Group", y = "Estimated Coefficient") + coord_polar(theta = "x", direction=1 )
 
 
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot() + facet_wrap(~ MDL) + 
-  labs(title ="Coefficient estimates by model", x = "Age Group", y = "Estimated Correlation")
+  labs(title ="Coefficient estimates by model", x = "Age Group", y = "Estimated Coefficient")
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_boxplot() + facet_wrap(~ YEAR) + 
-  labs(title ="Coefficient estimates by age", x = "Age Group", y = "Estimated Correlation")
+  labs(title ="Coefficient estimates by age", x = "Age Group", y = "Estimated Coefficient")
 
 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_errorbar() + 
-  facet_grid(YEAR~ MDL)   + labs(title ="Coefficient error bars by year and model", x = "Age Group", y = "Estimated Correlation") 
+  facet_grid(YEAR~ MDL)   + labs(title ="Coefficient error bars by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() + 
-  facet_grid(YEAR~ MDL)  + labs(title ="Coefficient estimate ranges by year and model", x = "Age Group", y = "Estimated Correlation") 
+  facet_grid(YEAR~ MDL)  + labs(title ="Coefficient estimate ranges by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
 
 
@@ -51,6 +51,48 @@ NAges <- subset(OUTPUT, OUTPUT$Var %in% c("HDD65","CDD65","inc10","TYPEHUQ","HOM
 
 ### NAges PLOTS
 ggplot(NAges, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
-  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Correlation") 
+  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
+
+
+
+#########
+#########
+########
+# SMOOTHING *****
+###############
+
+Ages$Coef <- as.integer(Ages$Coef)
+
+
+# creating a variable for x axis to run smoothing regression
+
+Ages$REGX <- 0
+r <- length(unique(Ages$Var))
+for (i in 1:r) {
+  var <- unique(Ages$Var)[i]
+  num <- rank(unique(Ages$Var))[i]
+  Ages$REGX <- ifelse(Ages$Var == var, rank(unique(Ages$Var))[i], Ages$REGX)
+}
+
+## loess smoothing
+ggplot(Ages, aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
+  geom_point() +
+  geom_smooth(se = FALSE,span = 0.8) +
+  facet_wrap(~MDL) +
+  labs(title ="Coefficient estimate trends by year and model -- loess smoothing", x = "Age Group", y = "Estimated Coefficient") 
+
+## fitting a linear line
+ggplot(Ages, aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
+  geom_point() +
+  geom_smooth(se = FALSE,method='lm') +
+  facet_wrap(~MDL) +
+  labs(title ="Coefficient estimate trends by year and model -- linear line", x = "Age Group", y = "Estimated Coefficient") 
+
+## fitting a spline degree 3
+ggplot(Ages, aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ splines::bs(x, 3), se = FALSE) +
+  facet_wrap(~MDL) +
+  labs(title ="Coefficient estimate trends by year and model -- linear spline degree 3", x = "Age Group", y = "Estimated Coefficient") 
 
