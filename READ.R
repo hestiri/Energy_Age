@@ -49,7 +49,7 @@ for (i in 1:ll) {
 }
 
 #calculating total energy use
-d87$BTUTOT <- d87$BTUKER+d87$BTUEL+d87$BTUNG+d87$BTUFO+d87$BTUNG+d87$BTULP
+d87$BTUTOT <- d87$BTUKER+d87$BTUEL+d87$BTUFO+d87$BTUNG+d87$BTULP
 
 d87$MONEYPY <- d87$ONEYPY
 
@@ -147,7 +147,7 @@ for (i in 1:ll2) {
 }
 
 #calculating total energy use
-d90$BTUTOT <- d90$BTUKER+d90$BTUEL+d90$BTUNG+d90$BTUFO+d90$BTUNG+d90$BTULP
+d90$BTUTOT <- d90$BTUKER+d90$BTUEL+d90$BTUFO+d90$BTUNG+d90$BTULP
 d90 <- subset(d90, d90$HHID != 1)
 
 
@@ -230,7 +230,9 @@ necFields <- c("DOEID",                              #id variable
 
 d09 <- d09[ ,necFields]
 d09$HOMEAREA <- d09$TOTSQFT
-d09$BTUTOT <- d09$TOTALBTU
+d09$BTUTOT2 <- d09$TOTALBTU
+#calculating total energy use
+d09$BTUTOT <- d09$BTUKER+d09$BTUEL+d09$BTUFO+d09$BTUNG+d09$BTULP
 
 ### Constructing 10-year housing age groups
 d09$YEARMADE10 <- d09$YEARMADE
@@ -303,10 +305,118 @@ d09 <- d09 %>%
   )
 
 
+
+
+
+#### processing 2005 data
+
+d05 <- read.table("Data/05/05data.csv", header=T, sep=',')
+names(d05)
+## Trim to necessary fields
+
+necFields <- c("DOEID",                              #id variable
+               "HD65","CD65",#"HDD30YR", "CDD30YR", #these are local climate variables
+               "DIVISION","REGIONC",                 #census divisions and regions
+               "HHSEX","HHAGE",                          #age of householder
+               "AGEHHMEM2", "AGEHHMEM3","AGEHHMEM4","AGEHHMEM5","AGEHHMEM6",
+               "AGEHHMEM7","AGEHHMEM8","AGEHHMEM9","AGEHHMEM10","AGEHHMEM11",
+               "AGEHHMEM12", #age of householder members 2-12 (categorical)
+               "NWEIGHT",                            #weight variable
+               "BTUKER","BTUEL","BTUNG","BTUFO","BTULP",#"TOTALDOL",                #total energy consumption and total energy expenditure
+               "YEARMADE","TYPEHUQ",                 #year the building was built and building type
+               #"EDUCATION",                          #highest education of householder
+               "NHSLDMEM",                           #household size   
+               "MONEYPY",                           #income
+               "TOTSQFT")                            #house size
+
+d05 <- d05[ ,necFields]
+d05$HOMEAREA <- d05$TOTSQFT
+d05$HDD65 <- d05$HD65
+d05$CDD65 <- d05$CD65
+
+
+ll <- length(d05)
+for (i in 1:ll) {
+  col <- names(d05[i])
+  d05[,col] <- ifelse(d05[,col] == 9999999, 0,d05[,col])
+  d05[,col] <- ifelse(d05[,col] == 99, 0,d05[,col])
+  
+}
+
+#calculating total energy use
+d05$BTUTOT <- d05$BTUKER+d05$BTUEL+d05$BTUFO+d05$BTUNG+d05$BTULP
+
+
+
+
+
+### Constructing 10-year housing age groups
+d05$YEARMADE10 <- d05$YEARMADE
+
+d05$YEARMADE10 <- ifelse(d05$YEARMADE10 < 03, 06, d05$YEARMADE10) #more than 50
+d05$YEARMADE10 <- ifelse(d05$YEARMADE10 == 03, 05, d05$YEARMADE10) #40-50
+d05$YEARMADE10 <- ifelse(d05$YEARMADE10 == 04, 04, d05$YEARMADE10) #30-40
+d05$YEARMADE10 <- ifelse(d05$YEARMADE10 > 04 & d05$YEARMADE10 < 07, 03, d05$YEARMADE10) #20-30
+d05$YEARMADE10 <- ifelse(d05$YEARMADE10 > 06 & d05$YEARMADE10 < 09, 02, d05$YEARMADE10) #10-20
+d05$YEARMADE10 <- ifelse(d05$YEARMADE10 > 08, 01, d05$YEARMADE10) #less than 10 years old buildings
+
+
+
+##Create count columns
+d05$age05 <- rowSums(d05[,7:18]<5 & d05[,7:18] > 0) #<5 years olds
+d05$age05to09 <- rowSums(d05[,7:18]>4 & d05[,7:18]<10) #5-9 years olds
+d05$age10to14 <- rowSums(d05[,7:18]>9 & d05[,7:18]<15) #10-14 years olds
+d05$age15to19 <- rowSums(d05[,7:18]>14 & d05[,7:18]<20) #15-19 years olds
+d05$age20to24 <- rowSums(d05[,7:18]>19 & d05[,7:18]<25) #20-24 years olds
+d05$age25to29 <- rowSums(d05[,7:18]>24 & d05[,7:18]<30) #25-29 years olds
+d05$age30to34 <- rowSums(d05[,7:18]>29 & d05[,7:18]<35) #30-34 years olds
+d05$age35to39 <- rowSums(d05[,7:18]>34 & d05[,7:18]<40) #35-39 years olds
+d05$age40to44 <- rowSums(d05[,7:18]>39 & d05[,7:18]<45) #40-44 years olds
+d05$age45to49 <- rowSums(d05[,7:18]>44 & d05[,7:18]<50) #45-49 years olds
+d05$age50to54 <- rowSums(d05[,7:18]>49 & d05[,7:18]<55) #50-54 years olds
+d05$age55to59 <- rowSums(d05[,7:18]>54 & d05[,7:18]<60) #55-59 years olds
+d05$age60to64 <- rowSums(d05[,7:18]>59 & d05[,7:18]<65) #60-64 years olds
+d05$age65to69 <- rowSums(d05[,7:18]>64 & d05[,7:18]<70) #65-69 years olds
+d05$age70to74 <- rowSums(d05[,7:18]>69 & d05[,7:18]<75) #70-74 years olds
+d05$age75to79 <- rowSums(d05[,7:18]>74 & d05[,7:18]<80) #75-79 years olds
+d05$age80p <- rowSums(d05[,7:18]>79) #>80 years olds
+
+
+
+##harmonizing income variable with 10k groups
+d05$inc10 <- 0
+d05$inc10 <- ifelse(d05$MONEYPY < 5, 1, d05$inc10) # less than 10k
+d05$inc10 <- ifelse(d05$MONEYPY < 7 & d05$MONEYPY > 4, 2, d05$inc10) # 10-20
+d05$inc10 <- ifelse(d05$MONEYPY < 9 & d05$MONEYPY > 6, 3, d05$inc10) # 20-30
+d05$inc10 <- ifelse(d05$MONEYPY < 11 & d05$MONEYPY > 8, 4, d05$inc10) # 30-40
+d05$inc10 <- ifelse(d05$MONEYPY < 13 & d05$MONEYPY > 10, 5, d05$inc10) # 40-50
+d05$inc10 <- ifelse(d05$MONEYPY < 18 & d05$MONEYPY > 12, 6, d05$inc10) # 50-75
+d05$inc10 <- ifelse(d05$MONEYPY > 17, 7, d05$inc10) # >75
+
+
+d05$HHID <- d05$DOEID
+d05$YEAR <- 2005
+names(d05)
+#harmonizing data model for join
+
+d05 <- d05 %>%
+  select(HHID,REGIONC,DIVISION,YEAR,YEARMADE10,TYPEHUQ,HOMEAREA,CDD65,HDD65,HHSEX,NHSLDMEM,inc10,MONEYPY,NWEIGHT,BTUKER,BTUEL,BTUNG,BTUFO,BTULP,BTUTOT,
+         age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
+  )
+
+
+
+
+
+
+
+
+
+
 ###########
 ##########
 #########
 ########
 #COMBINING THE FINAL DATA
-dat <- rbind(d87,d90,d09)
+dat <- rbind(d87,d90,d05,d09)
 
