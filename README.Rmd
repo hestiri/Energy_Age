@@ -7,7 +7,7 @@ output: html_document
 
 This is the results of analyses on energy consumption patterns over age in 4 waves of data from the US Residential Energy Consumption Survey.
 ```{r, echo=FALSE, include=FALSE}
-require(data.table);require(dplyr);require(ggplot2);require(gridExtra);require(rmarkdown);require(knitr):require(plotly);require(DT);require(treemap)
+require(data.table);require(dplyr);require(ggplot2);require(rmarkdown);require(knitr):require(plotly);require(DT);require(treemap)
 source("Analysis.R")
  
 ```
@@ -50,24 +50,27 @@ Plotting results:
 ```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.align='center', fig.height= 15,  fig.width= 20}
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
   geom_point(aes(x= REGX, y=Coef, color=as.factor(sig0.05))) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
+  geom_smooth(aes(x= REGX, y=Coef),se = T,span = 0.8, color="salmon") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_grid(YEAR~ MDL)  + labs(title ="Coefficient estimate ranges by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
   geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
-  facet_wrap(~MDL)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient") 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~MDL)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
 
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
-  geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
-  facet_wrap(~YEAR)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient") 
+# ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
+#   geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
+#   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+#   facet_wrap(~YEAR)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient") 
 ```
 
 
 ```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.align='center', fig.height= 30,  fig.width= 30}
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + 
-  facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") + 
-  coord_polar(theta = "x", direction=1 ) + theme(legend.position='none')
+# ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + 
+#   facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") + 
+#   coord_polar(theta = "x", direction=1 ) + theme(legend.position='none')
 ```
 
