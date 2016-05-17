@@ -32,11 +32,12 @@ for (i in 1:r) {
 ##########
 ######
 ######## AGE PLOTS
-ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Coef)) + 
-  facet_grid(YEAR~ MDL)  + labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient")
+#plot1_Alt
+ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes()) + 
+  facet_grid(YEAR~ MDL)  + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient")
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity") + facet_grid(YEAR~ MDL) +
-  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") 
+  labs(title ="Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + 
   facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") + 
@@ -52,35 +53,42 @@ ggplot(Ages, aes(x = Var, y = Coef)) +
   geom_boxplot(aes(fill=Coef), alpha = 0.5) +
   scale_fill_continuous(low="gold", high="red",guide = FALSE) +
   geom_smooth(aes(x= REGX, y=Coef),col ="black",se = T,span = 0.8, alpha=0.5) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_wrap(~MDL)  + 
   labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient") 
 
 ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + 
   geom_point(aes(x= Var, y=Coef),alpha = 0.5) + 
   geom_boxplot(aes(fill=Coef), alpha = 0.5) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   geom_smooth(aes(x= REGX, y=Coef),col = "black", se = T,span = 0.8) +
   facet_wrap(~YEAR)  + 
   labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient") 
 
 
 
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_errorbar() +
+ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_errorbar() +   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_grid(YEAR~ MDL)   + labs(title ="Coefficient error bars by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
-
+##plot 1
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
   geom_point(aes(x= REGX, y=Coef, color=as.factor(sig0.05))) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
+  geom_smooth(aes(x= REGX, y=Coef),se = T,span = 0.8, color="salmon") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_grid(YEAR~ MDL)  + labs(title ="Coefficient estimate ranges by year and model", x = "Age Group", y = "Estimated Coefficient") 
+
+
+##plot 2 
+ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
+  geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
+  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  facet_wrap(~MDL)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient") 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
   geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
-  facet_wrap(~MDL)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient") 
-
-plot <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
-  geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_wrap(~YEAR)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient") 
 
 
