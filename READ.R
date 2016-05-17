@@ -330,9 +330,10 @@ necFields <- c("DOEID",                              #id variable
                "TOTSQFT")                            #house size
 
 d05 <- d05[ ,necFields]
-d05$HOMEAREA <- d05$TOTSQFT
 d05$HDD65 <- d05$HD65
 d05$CDD65 <- d05$CD65
+d05$HOMEAREA <- d05$TOTSQFT
+
 
 
 ll <- length(d05)
