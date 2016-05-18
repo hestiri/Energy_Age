@@ -71,19 +71,27 @@ ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + 
   facet_grid(YEAR~ MDL)   + labs(title ="Coefficient error bars by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
 ##plot 1
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
-  geom_point(aes(x= REGX, y=Coef, color=as.factor(sig0.05))) +
-  geom_smooth(aes(x= REGX, y=Coef),se = T,span = 0.8, color="salmon") +
+plot1 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.7) +
+  geom_smooth(aes(x= REGX, y=Coef),se = T,span = 0.8, color="white") +
+  geom_point(aes(x= REGX, y=Coef, color=as.factor(sig0.05)),alpha=0.8, shape = 21, size = 2, stroke = 1.5) +
+  scale_colour_manual(values = c("gray50", "black"),guide = guide_legend(title = "Sig. at p<0.05")) +
+  geom_smooth(aes(x= REGX, y=Coef),se = F,span = 0.8, color="salmon", size=1, alpha=0.3) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  facet_grid(YEAR~ MDL)  + labs(title ="Coefficient estimate ranges by year and model", x = "Age Group", y = "Estimated Coefficient") 
+  facet_grid(YEAR~ MDL)  + labs(title ="Coefficient Estimate Ranges by Year and Model", x = "Age Group", y = "Estimated Coefficient") 
 
+ggsave("graphics/plot1.png", plot1, dpi = 500, width = 20, height = 12)
 
 ##plot 2 
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
-  geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
+plot2 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
+  guides(colour = guide_legend("Year")) +
+  geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
+  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = F,span = 0.8) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  facet_wrap(~MDL)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient") 
+  facet_wrap(~MDL, ncol=2)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
+
+ggsave("graphics/plot2.png", plot2, dpi = 500, width = 12, height = 14)
+
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
   geom_point(aes(x= REGX, y=Coef, color=as.factor(YEAR))) +
