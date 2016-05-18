@@ -74,12 +74,13 @@ ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + 
 plot1 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.7) +
   geom_smooth(aes(x= REGX, y=Coef),se = T,span = 0.8, color="white") +
   geom_point(aes(x= REGX, y=Coef, color=as.factor(sig0.05)),alpha=0.8, shape = 21, size = 2, stroke = 1.5) +
-  scale_colour_manual(values = c("gray50", "black"),guide = guide_legend(title = "Sig. at p<0.05")) +
+  scale_colour_manual(values = c("gray50", "black"),guide = guide_legend(title = "Significance at p<0.05")) +
+  theme(legend.position = "bottom") +
   geom_smooth(aes(x= REGX, y=Coef),se = F,span = 0.8, color="salmon", size=1, alpha=0.3) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_grid(YEAR~ MDL)  + labs(title ="Coefficient Estimate Ranges by Year and Model", x = "Age Group", y = "Estimated Coefficient") 
 
-ggsave("graphics/plot1.png", plot1, dpi = 500, width = 20, height = 12)
+ggsave("graphics/plot1.png", plot1, dpi = 500, width = 24, height = 12)
 
 ##plot 2 
 plot2 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
@@ -88,9 +89,24 @@ plot2 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + them
   geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = F,span = 0.8) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  facet_wrap(~MDL, ncol=2)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
+  theme(legend.position = "bottom") +
+  facet_wrap(~MDL, ncol=4)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
 
-ggsave("graphics/plot2.png", plot2, dpi = 500, width = 12, height = 14)
+ggsave("graphics/plot2.png", plot2, dpi = 500, width = 16, height = 8)
+
+
+##plot 3
+plot3 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
+  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(MDL)),se = T,span = 0.8) +
+  geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
+  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(MDL)),se = F,span = 0.8) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(legend.position = "bottom") +
+  guides(col = guide_legend(nrow = 4,"Model",title.position = "top")) +
+  facet_wrap(~YEAR, ncol=2)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient")  
+
+ggsave("graphics/plot3.png", plot3, dpi = 500, width = 8, height = 10)
+
 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
