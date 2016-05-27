@@ -78,9 +78,11 @@ plot1 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + them
   theme(legend.position = "bottom") +
   geom_smooth(aes(x= REGX, y=Coef),se = F,span = 0.8, color="salmon", size=1, alpha=0.3) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(strip.text.x = element_text(size=9, face="bold"),
+        strip.text.y = element_text(size=9, face="bold")) +
   facet_grid(YEAR~ MDL)  + labs(title ="Coefficient Estimate Ranges by Year and Model", x = "Age Group", y = "Estimated Coefficient") 
-
-ggsave("graphics/plot1.png", plot1, dpi = 500, width = 24, height = 12)
+ 
+ggsave("graphics/plot1.pdf", plot1, dpi = 500, width = 24, height = 12)
 
 ##plot 2 
 plot2 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
@@ -89,10 +91,12 @@ plot2 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + them
   geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = F,span = 0.8) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(strip.text.x = element_text(size=9, face="bold"),
+        strip.text.y = element_text(size=9, face="bold")) +
   theme(legend.position = "bottom") +
-  facet_wrap(~MDL, ncol=4)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
+  facet_wrap(~MDL, ncol=8)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
 
-ggsave("graphics/plot2.png", plot2, dpi = 500, width = 16, height = 8)
+ggsave("graphics/plot2.png", plot2, dpi = 500, width = 24, height = 5)
 
 
 ##plot 3
@@ -102,11 +106,25 @@ plot3 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + them
   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(MDL)),se = F,span = 0.8) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position = "bottom") +
+  theme(strip.text.x = element_text(size=9, face="bold"),
+        strip.text.y = element_text(size=9, face="bold")) +
   guides(col = guide_legend(nrow = 4,"Model",title.position = "top")) +
-  facet_wrap(~YEAR, ncol=2)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient")  
+  facet_wrap(~YEAR, ncol=1)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient")  
 
-ggsave("graphics/plot3.png", plot3, dpi = 500, width = 8, height = 10)
+ggsave("graphics/plot3.png", plot3, dpi = 500, width = 4, height = 12)
 
+
+plot4 <- ggplot(subset(Ages, Ages$MDL == "B_age_climate" | Ages$MDL == "F_age_climate_housingSize"), aes(x = Var, y = Coef)) + geom_bar(stat = "identity",aes(fill=Var)) + 
+  facet_grid(YEAR~ MDL)  + labs(title ="", x = "", y = "") + 
+  coord_polar(theta = "x", direction=1 ) + 
+  theme(axis.text.x = element_text(hjust = 1)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(size=6)) +
+  theme(axis.text.y = element_text(size=6)) +
+  theme(legend.position='none')
+
+
+ggsave("graphics/plot4.png", plot4, dpi = 500, width = 7, height = 12)
 
 
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_pointrange() +
