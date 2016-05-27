@@ -1,88 +1,15 @@
 ---
-title: "Age_Energy Profile"
+title: "README"
 author: "Hossein Estiri"
-date: "May 7, 2016"
-output: html_document
+date: "May, 2016"
 ---
 
-This is the results of analyses on energy consumption patterns over age in 4 waves of data from the US Residential Energy Consumption Survey.
-```{r, echo=FALSE, include=FALSE}
-require(data.table);require(dplyr);require(ggplot2);require(rmarkdown);require(knitr):require(plotly);require(DT);require(treemap)
-source("Analysis.R")
- 
-```
+This study investigates whether there is an age profile for consumption of energy in US residential buildings. We use data from 4 waves of the Residential Enenrgy Consumption Survey (RECS) in 1987, 1990, 2005, and 2009. You can find the data used in this study here: [RECS data used in this study](https://github.com/hestiri/Energy_Age/tree/master/Data).
 
-#First there is data processing to extract only cohort estimates.
-```{r, echo=FALSE}
-##First lookin at only age variables:
+* `READ.R` contains all data preparation and manupulation codes.
+* `Analysis.R` includes the analyses codes.
+* `Plots.R` includes scripts that are being used to plot the results.
 
-Ages <- subset(OUTPUT, OUTPUT$Var %in% c("age05","age05to09","age10to14","age15to19","age20to24","age25to29",
-                                         "age30to34","age35to39","age40to44","age45to49","age50to54","age55to59",
-                                         "age60to64","age65to69","age70to74","age75to79","age80p"))
+Also look at `Results.html` for some visual presentation experiments on the results.
 
-
-
-########
-# SMOOTHING *****
-###############
-
-Ages$Coef <- as.integer(Ages$Coef)
-
-
-# creating a variable for x axis to run smoothing regression
-
-Ages$REGX <- 0
-r <- length(unique(Ages$Var))
-for (i in 1:r) {
-  var <- unique(Ages$Var)[i]
-  num <- rank(unique(Ages$Var))[i]
-  Ages$REGX <- ifelse(Ages$Var == var, rank(unique(Ages$Var))[i], Ages$REGX)
-}
-```
-
-Below is the table of estimated for each age group/cohort, across years, and models:
-
-```{r, echo=FALSE}
-datatable(Ages, options = list(pageLength = 10))
-```
-
-Plotting results:
-```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.align='center', fig.height= 15,  fig.width= 20}
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.7) +
-  geom_smooth(aes(x= REGX, y=Coef),se = T,span = 0.8, color="white") +
-  geom_point(aes(x= REGX, y=Coef, color=as.factor(sig0.05)),alpha=0.8, shape = 21, size = 2, stroke = 1.5) +
-  scale_colour_manual(values = c("gray50", "black"),guide = guide_legend(title = "Significance at p<0.05")) +
-  theme(legend.position = "bottom") +
-  geom_smooth(aes(x= REGX, y=Coef),se = F,span = 0.8, color="salmon", size=1, alpha=0.3) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  facet_grid(YEAR~ MDL)  + labs(title ="Coefficient Estimate Ranges by Year and Model", x = "Age Group", y = "Estimated Coefficient") 
-  
-
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = T,span = 0.8) +
-  guides(colour = guide_legend("Year")) +
-  geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = F,span = 0.8) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  theme(legend.position = "bottom") +
-  facet_wrap(~MDL, ncol=4)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
-  
-
-ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(MDL)),se = T,span = 0.8) +
-  geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(MDL)),se = F,span = 0.8) +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  theme(legend.position = "bottom") +
-  guides(col = guide_legend(nrow = 4,"Model",title.position = "top")) +
-  facet_wrap(~YEAR, ncol=2)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient")  
- 
-```
-
-
-```{r, echo=FALSE, warning=FALSE,  message=FALSE, fig.align='center', fig.height= 30,  fig.width= 30}
-# ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() + geom_bar(stat = "identity",aes(fill=Var)) + 
-#   facet_grid(YEAR~ MDL)  + labs(title =" Energy Demand Across Age groups by year and model", x = "Age Group", y = "Estimated Coefficient") + 
-#   coord_polar(theta = "x", direction=1 ) + theme(legend.position='none')
-```
-
+This is an on-going research. Collaborations are welcome!
