@@ -27,7 +27,11 @@ for (i in 1:r) {
   Ages$REGX <- ifelse(Ages$Var == var, rank(unique(Ages$Var))[i], Ages$REGX)
 }
 
-
+# 
+# labelModels <- c(Model1="Model 1: age", Model2="Model 2: age+climate",
+#                  Model3= "Model 3: age+climate+income", Model4 = "Model 4: age+climate+housing type",
+#                  Model5="Model 5: age+climate+housing age", Model6 = "Model 6: age+climate+housing size",
+#                  Model7="Model 7: age+climate+housing (All)", Model8="Model 8: age+climate+income+housing (All)")
 
 ##########
 ######
@@ -70,6 +74,7 @@ ggplot(Ages, aes(x = Var, y = Coef)) + theme_bw() +
 ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_errorbar() +   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   facet_grid(YEAR~ MDL)   + labs(title ="Coefficient error bars by year and model", x = "Age Group", y = "Estimated Coefficient") 
 
+
 ##plot 1
 plot1 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.7) +
   geom_smooth(aes(x= REGX, y=Coef),se = T,span = 0.8, color="white") +
@@ -78,11 +83,11 @@ plot1 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + them
   theme(legend.position = "bottom") +
   geom_smooth(aes(x= REGX, y=Coef),se = F,span = 0.8, color="salmon", size=1, alpha=0.3) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  theme(strip.text.x = element_text(size=9, face="bold"),
-        strip.text.y = element_text(size=9, face="bold")) +
-  facet_grid(YEAR~ MDL)  + labs(title ="Coefficient Estimate Ranges by Year and Model", x = "Age Group", y = "Estimated Coefficient") 
+  theme(strip.text.x = element_text(size=10, face="bold"),
+        strip.text.y = element_text(size=10, face="bold")) +
+  facet_grid(YEAR~ varnams)  + labs(title ="Coefficient Estimate Ranges by Year and Model", x = "Age Group", y = "Estimated Coefficient") 
  
-ggsave("graphics/plot1.pdf", plot1, dpi = 500, width = 24, height = 12)
+ggsave("graphics/plot1.png", plot1, dpi = 500, width = 24, height = 12)
 
 ##plot 2 
 plot2 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
@@ -91,27 +96,27 @@ plot2 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + them
   geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
   geom_smooth(aes(x= REGX, y=Coef, color=as.factor(YEAR)),se = F,span = 0.8) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  theme(strip.text.x = element_text(size=9, face="bold"),
-        strip.text.y = element_text(size=9, face="bold")) +
+  theme(strip.text.x = element_text(size=10, face="bold"),
+        strip.text.y = element_text(size=10, face="bold")) +
   theme(legend.position = "bottom") +
-  facet_wrap(~MDL, ncol=8)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
+  facet_wrap(~varnams, ncol=2)  + labs(title ="Coefficient estimate ranges by model", x = "Age Group", y = "Estimated Coefficient")  
 
-ggsave("graphics/plot2.png", plot2, dpi = 500, width = 24, height = 5)
+ggsave("graphics/plot2.png", plot2, dpi = 500, width = 9, height = 18)
 
 
 ##plot 3
 plot3 <- ggplot(Ages, aes(x = Var, y = Coef, ymin = lower, ymax = upper)) + theme_bw() + geom_linerange(alpha=0.3) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(MDL)),se = T,span = 0.8) +
+  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(varnams)),se = T,span = 0.8) +
   geom_point(aes(x= REGX, y=Coef),alpha=0.4,shape=19) +
-  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(MDL)),se = F,span = 0.8) +
+  geom_smooth(aes(x= REGX, y=Coef, color=as.factor(varnams)),se = F,span = 0.8) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.position = "bottom") +
   theme(strip.text.x = element_text(size=9, face="bold"),
         strip.text.y = element_text(size=9, face="bold")) +
-  guides(col = guide_legend(nrow = 4,"Model",title.position = "top")) +
-  facet_wrap(~YEAR, ncol=1)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient")  
+  guides(col = guide_legend(nrow = 4,"Model",title.position = "top"), labeller = labeller(MDL = labelModels)) +
+  facet_wrap(~YEAR, ncol=2)  + labs(title ="Coefficient estimate ranges by year", x = "Age Group", y = "Estimated Coefficient")  
 
-ggsave("graphics/plot3.png", plot3, dpi = 500, width = 4, height = 12)
+ggsave("graphics/plot3.pdf", plot3, dpi = 500, width = 8, height = 10)
 
 
 plot4 <- ggplot(subset(Ages, Ages$MDL == "B_age_climate" | Ages$MDL == "F_age_climate_housingSize"), aes(x = Var, y = Coef)) + geom_bar(stat = "identity",aes(fill=Var)) + 
