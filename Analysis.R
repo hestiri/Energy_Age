@@ -1,16 +1,16 @@
 source("READ.R")
 
 #Building formulas
-A_age <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model1 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                   age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                   age60to64+age65to69+age70to74+age75to79+age80p"
 )
-B_age_climate <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model2 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                           age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                           age60to64+age65to69+age70to74+age75to79+age80p+
                           HDD65+CDD65"
 )
-C_age_climate_income <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model3 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                age60to64+age65to69+age70to74+age75to79+age80p+
                                HDD65+CDD65+
@@ -18,33 +18,33 @@ C_age_climate_income <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+a
 )
 
 
-D_age_climate_housingType <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model4 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                        age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                        age60to64+age65to69+age70to74+age75to79+age80p+
                                        HDD65+CDD65+
                                        TYPEHUQ"
 )
 
-F_age_climate_housingSize <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model6 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                        age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                   age60to64+age65to69+age70to74+age75to79+age80p+
                                   HDD65+CDD65+
                                   HOMEAREA"
 )
-E_age_climate_housingAge <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model5 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                        age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                   age60to64+age65to69+age70to74+age75to79+age80p+
                                   HDD65+CDD65+
                                   YEARMADE10"
 )
-G_age_climate_housingAll <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model7 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                   age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                   age60to64+age65to69+age70to74+age75to79+age80p+
                                   HDD65+CDD65+
                                   TYPEHUQ+HOMEAREA+YEARMADE10"
 )
 
-H_age_climate_income_housingAll <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
+Model8 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                            age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                            age60to64+age65to69+age70to74+age75to79+age80p+
                                            HDD65+CDD65+
@@ -53,7 +53,7 @@ H_age_climate_income_housingAll <- as.formula("BTUTOT~age05+age05to09+age10to14+
 )
 
 ## a function for running the models and storing the results
-model <- function(x, y) {
+model <- function(x,vars, y, z) {
 fit <- lm(x) 
 N<- dim(summary(fit)$coefficients)[1]-1
 RES <- c(1:N)
@@ -66,6 +66,8 @@ RES$sig0.05 <- ifelse(summary(fit)$coefficients[-1,4] < 0.0499, "Sig.", "Not Sig
 RES$sig0.1 <- ifelse(summary(fit)$coefficients[-1,4] < 0.100001, "Sig.", "Not Sig.")
 RES$YEAR <- y
 RES$MDL <- x 
+RES$MDLX <- z ## ordering the models
+RES$varnams <- vars
 RES
 }
 
@@ -73,44 +75,44 @@ RES
 
 ## running the models and storing the results
 attach(d87)
-out1 <- model("A_age",1987)
-out2 <- model("B_age_climate",1987)
-out3 <- model("C_age_climate_income",1987)
-out4 <- model("D_age_climate_housingType",1987)
-out5 <- model("F_age_climate_housingSize",1987)
-out6 <- model("E_age_climate_housingAge",1987)
-out7 <- model("G_age_climate_housingAll",1987)
-out8 <- model("H_age_climate_income_housingAll",1987)
+out1 <- model("Model1","Model 1: age",1987,1)
+out2 <- model("Model2","Model 2: age+climate",1987,2)
+out3 <- model("Model3","Model 3: age+climate+income",1987,3)
+out4 <- model("Model4","Model 4: age+climate+housing type",1987,4)
+out5 <- model("Model6","Model 6: age+climate+housing size",1987,6)
+out6 <- model("Model5","Model 5: age+climate+housing age",1987,5)
+out7 <- model("Model7","Model 7: age+climate+housing (all)",1987,7)
+out8 <- model("Model8","Model 8: age+climate+income+housing (all)",1987,8)
 detach(d87)
 attach(d90)
-out9 <- model("A_age",1990)
-out10 <- model("B_age_climate",1990)
-out11 <- model("C_age_climate_income",1990)
-out12 <- model("D_age_climate_housingType",1990)
-out13 <- model("F_age_climate_housingSize",1990)
-out14 <- model("E_age_climate_housingAge",1990)
-out15 <- model("G_age_climate_housingAll",1990)
-out16 <- model("H_age_climate_income_housingAll",1990)
+out9 <- model("Model1","Model 1: age",1990,1)
+out10 <- model("Model2","Model 2: age+climate",1990,2)
+out11 <- model("Model3","Model 3: age+climate+income",1990,3)
+out12 <- model("Model4","Model 4: age+climate+housing type",1990,4)
+out13 <- model("Model6","Model 6: age+climate+housing size",1990,6)
+out14 <- model("Model5","Model 5: age+climate+housing age",1990,5)
+out15 <- model("Model7","Model 7: age+climate+housing (all)",1990,7)
+out16 <- model("Model8","Model 8: age+climate+income+housing (all)",1990,8)
 detach(d90)
 attach(d05)
-out17 <- model("A_age",2005)
-out18 <- model("B_age_climate",2005)
-out19 <- model("C_age_climate_income",2005)
-out20 <- model("D_age_climate_housingType",2005)
-out21 <- model("F_age_climate_housingSize",2005)
-out22 <- model("E_age_climate_housingAge",2005)
-out23 <- model("G_age_climate_housingAll",2005)
-out24 <- model("H_age_climate_income_housingAll",2005)
+out17 <- model("Model1","Model 1: age",2005,1)
+out18 <- model("Model2","Model 2: age+climate",2005,2)
+out19 <- model("Model3","Model 3: age+climate+income",2005,3)
+out20 <- model("Model4","Model 4: age+climate+housing type",2005,4)
+out21 <- model("Model6","Model 6: age+climate+housing size",2005,6)
+out22 <- model("Model5","Model 5: age+climate+housing age",2005,5)
+out23 <- model("Model7","Model 7: age+climate+housing (all)",2005,7)
+out24 <- model("Model8","Model 8: age+climate+income+housing (all)",2005,8)
 detach(d05)
 attach(d09)
-out25 <- model("A_age",2009)
-out26 <- model("B_age_climate",2009)
-out27 <- model("C_age_climate_income",2009)
-out28 <- model("D_age_climate_housingType",2009)
-out29 <- model("F_age_climate_housingSize",2009)
-out30 <- model("E_age_climate_housingAge",2009)
-out31 <- model("G_age_climate_housingAll",2009)
-out32 <- model("H_age_climate_income_housingAll",2009)
+out25 <- model("Model1","Model 1: age",2009,1)
+out26 <- model("Model2","Model 2: age+climate",2009,2)
+out27 <- model("Model3","Model 3: age+climate+income",2009,3)
+out28 <- model("Model4","Model 4: age+climate+housing type",2009,4)
+out29 <- model("Model6","Model 6: age+climate+housing size",2009,6)
+out30 <- model("Model5","Model 5: age+climate+housing age",2009,5)
+out31 <- model("Model7","Model 7: age+climate+housing (all)",2009,7)
+out32 <- model("Model8","Model 8: age+climate+income+housing (all)",2009,8)
 detach(d09)
 
 ## joining the results
