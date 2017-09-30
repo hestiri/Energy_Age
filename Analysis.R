@@ -29,7 +29,7 @@ Model6 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25
                                        age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                   age60to64+age65to69+age70to74+age75to79+age80p+
                                   HDD65+CDD65+
-                                  HOMEAREA"
+                                  HOMEAREA.percap"
 )
 Model5 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
                                        age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
@@ -41,7 +41,7 @@ Model7 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25
                                   age30to34+age35to39+age40to44+age45to49+age50to54+age55to59+
                                   age60to64+age65to69+age70to74+age75to79+age80p+
                                   HDD65+CDD65+
-                                  TYPEHUQ+HOMEAREA+YEARMADE10"
+                                  TYPEHUQ+HOMEAREA.percap+YEARMADE10"
 )
 
 Model8 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25to29+
@@ -49,10 +49,10 @@ Model8 <- as.formula("BTUTOT~age05+age05to09+age10to14+age15to19+age20to24+age25
                                            age60to64+age65to69+age70to74+age75to79+age80p+
                                            HDD65+CDD65+
                                            inc10+
-                                           TYPEHUQ+HOMEAREA+YEARMADE10"
+                                           TYPEHUQ+HOMEAREA.percap+YEARMADE10"
 )
 
-## a function for running the models and storing the results
+## helper function for running the models and storing the results
 model <- function(x,vars, y, z) {
 fit <- lm(x) 
 N<- dim(summary(fit)$coefficients)[1]-1
@@ -62,13 +62,16 @@ RES$Var <- names(fit$coefficients[-1])
 RES$Coef <- summary(fit)$coefficients[-1,1]
 RES$upper <- RES$Coef+summary(fit)$coefficients[-1,2]
 RES$lower <- RES$Coef-summary(fit)$coefficients[-1,2]
-RES$sig0.05 <- ifelse(summary(fit)$coefficients[-1,4] < 0.0499, "Sig.", "Not Sig.")
-RES$sig0.1 <- ifelse(summary(fit)$coefficients[-1,4] < 0.100001, "Sig.", "Not Sig.")
+RES$sig0.05 <- ifelse(summary(fit)$coefficients[-1,4] < 0.0499, "Significant", "Not Significant")
+RES$sig0.1 <- ifelse(summary(fit)$coefficients[-1,4] < 0.100001, "Significant", "Not Significant")
 RES$YEAR <- y
 RES$MDL <- x 
 RES$MDLX <- z ## ordering the models
 RES$varnams <- vars
+RES$R2 = summary(fit)$r.squared#adj.r.squared
+return(
 RES
+)
 }
 
 
@@ -119,13 +122,22 @@ detach(d09)
 OUTPUT <- rbind(out1,out2,out3,out4,out5,out6,out7,out8,out9,out10,out11,out12,out13,out14,out15,out16,out17,out18,out19,out20,out21,out22,out23,out24,out25,out26,out27,out28,out29,out30,out31,out32)
 rm(out1,out2,out3,out4,out5,out6,out7,out8,out9,out10,out11,out12,out13,out14,out15,out16,out17,out18,out19,out20,out21,out22,out23,out24,out25,out26,out27,out28,out29,out30,out31,out32)
 
+OUTPUT.bundle = subset(OUTPUT, OUTPUT$MDLX %in% c(2, 7,8))
+OUTPUT.bundle$MODEL= as.character("Model C")
+OUTPUT.bundle$MODEL = ifelse(OUTPUT.bundle$MDLX == 2, as.character("Model A"), OUTPUT.bundle$MODEL)
+OUTPUT.bundle$MODEL = ifelse(OUTPUT.bundle$MDLX == 7, as.character("Model B"), OUTPUT.bundle$MODEL)
 
+OUTPUT.bundle$varnams = ifelse (OUTPUT.bundle$MDLX == 2,"Model A: age + climate",OUTPUT.bundle$varnams) 
+OUTPUT.bundle$varnams = ifelse (OUTPUT.bundle$MDLX == 7, "Model B: age + climate + housing",OUTPUT.bundle$varnams) 
+OUTPUT.bundle$varnams = ifelse (OUTPUT.bundle$MDLX == 8, "Model C: age + climate + housing + income",OUTPUT.bundle$varnams)
 
-
-
-
-
-
-
-
+OUTPUT$MDL2 = ""
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model1", "Model 0",OUTPUT$MDL2)
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model2", "Model A",OUTPUT$MDL2)
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model3", "Model A+income",OUTPUT$MDL2)
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model4", "Model A+housing.type",OUTPUT$MDL2)
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model5", "Model A+housing.age",OUTPUT$MDL2)
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model6", "Model A+housing.size",OUTPUT$MDL2)
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model7", "Model B",OUTPUT$MDL2)
+OUTPUT$MDL2 = ifelse (OUTPUT$MDL == "Model8", "Model C",OUTPUT$MDL2)
 

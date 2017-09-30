@@ -2,6 +2,8 @@
 if (!require("data.table")) install.packages('data.table')
 if (!require("dplyr")) install.packages('dplyr')
 if (!require("ggplot2")) install.packages('ggplot2')
+if (!require("ggplot2")) install.packages('ggplot2')
+
 
 
 
@@ -29,7 +31,9 @@ names(d87)
 d87 <- d87 %>%
   select(HHID,REGIONC,DIVISION,YEARMADE,TYPEHU,HOMEAREA,CDD65,HDD65,HHSEX,HHAGE,
          YEARS02,YEARS03,YEARS04,YEARS05,YEARS06,YEARS07,YEARS08,YEARS09,YEARS10,YEARS11,
-         YEARS12,NHSLDMEM,ONEYPY,NWEIGHT,BTUKER,BTUEL,BTUNG,BTUFO,BTUNG,BTULP)
+         YEARS12,NHSLDMEM,ONEYPY,NWEIGHT,BTUKER,BTUEL,BTUNG,BTUFO,BTUNG,BTULP,KOWNRENT)
+
+d87 = subset(d87,d87$KOWNRENT==1)
 
 
 
@@ -103,6 +107,9 @@ d87 <- d87 %>%
          age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
   )
 
+d87$HOMEAREA.percap = d87$HOMEAREA/d87$NHSLDMEM
+
+
 #####
 ####
 ####
@@ -135,7 +142,9 @@ names(d90)
 d90 <- d90 %>%
   select(HHID,NWEIGHT,REGIONC,DIVISION,TYPEHUQ,YEARMADE,HOMEAREA,HHSEX,HHAGE,YEARS02,
          YEARS03,YEARS04,YEARS05,YEARS06,YEARS07,YEARS08,YEARS09,
-         YEARS10,YEARS11,YEARS12,NHSLDMEM,MONEYPY,CDD65,HDD65,BTUKER,BTUEL,BTUNG,BTUFO,BTUNG,BTULP)
+         YEARS10,YEARS11,YEARS12,NHSLDMEM,MONEYPY,CDD65,HDD65,BTUKER,BTUEL,BTUNG,BTUFO,BTUNG,BTULP,KOWNRENT)
+
+d90 = subset(d90,d90$KOWNRENT==1)
 
 ## replacing 9999999 and 99 with 0
 ll2 <- length(d90)
@@ -201,6 +210,7 @@ d90 <- d90 %>%
   select(HHID,REGIONC,DIVISION,YEAR,YEARMADE10,TYPEHUQ,HOMEAREA,CDD65,HDD65,HHSEX,NHSLDMEM,inc10,MONEYPY,NWEIGHT,BTUKER,BTUEL,BTUNG,BTUFO,BTULP,BTUTOT,
          age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
   )
+d90$HOMEAREA.percap = d90$HOMEAREA/d90$NHSLDMEM
 
 #####
 ###
@@ -224,7 +234,8 @@ necFields <- c("DOEID",                              #id variable
                "TOTALBTU","BTUKER","BTUEL","BTUNG","BTUFO","BTULP",#"TOTALDOL",                #total energy consumption and total energy expenditure
                "YEARMADE","TYPEHUQ",                 #year the building was built and building type
                #"EDUCATION",                          #highest education of householder
-               "NHSLDMEM",                           #household size   
+               "NHSLDMEM",                           #household size
+               "KOWNRENT",
                "MONEYPY",                           #income
                "TOTSQFT")                            #house size
 
@@ -233,6 +244,7 @@ d09$HOMEAREA <- d09$TOTSQFT
 d09$BTUTOT2 <- d09$TOTALBTU
 #calculating total energy use
 d09$BTUTOT <- d09$BTUKER+d09$BTUEL+d09$BTUFO+d09$BTUNG+d09$BTULP
+d09 = subset(d09,d09$KOWNRENT==1)
 
 ### Constructing 10-year housing age groups
 d09$YEARMADE10 <- d09$YEARMADE
@@ -304,6 +316,7 @@ d09 <- d09 %>%
          age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
   )
 
+d09$HOMEAREA.percap = d09$HOMEAREA/d09$NHSLDMEM
 
 
 
@@ -327,12 +340,14 @@ necFields <- c("DOEID",                              #id variable
                #"EDUCATION",                          #highest education of householder
                "NHSLDMEM",                           #household size   
                "MONEYPY",                           #income
+               "KOWNRENT",                          #rental or owner occupied=1 
                "TOTSQFT")                            #house size
 
 d05 <- d05[ ,necFields]
 d05$HDD65 <- d05$HD65
 d05$CDD65 <- d05$CD65
 d05$HOMEAREA <- d05$TOTSQFT
+d05 = subset(d05,d05$KOWNRENT==1)
 
 
 
@@ -405,8 +420,7 @@ d05 <- d05 %>%
          age05,age05to09,age10to14,age15to19,age20to24,age25to29,age30to34,age35to39,age40to44,age45to49,age50to54,age55to59,age60to64,age65to69,age70to74,age75to79,age80p
   )
 
-
-
+d05$HOMEAREA.percap = d05$HOMEAREA/d05$NHSLDMEM
 
 
 

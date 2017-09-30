@@ -172,15 +172,16 @@ plotG <-
   facet_wrap(~ varnams, ncol = 2) +
   # geom_linerange(alpha=0.3) +
   geom_smooth(aes(x= REGX, y=Coef),se = F,span = 0.8) +
-  guides(col = guide_legend(nrow = 3,"Cohort",title.position = "top")) +
+  guides(col = guide_legend(nrow = 4,"Cohort",title.position = "top")) +
   # guides(col = guide_legend(nrow = 1,"Cohort",title.position = "top")) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  theme(strip.text.x = element_text(size=9, face="bold"),
-        strip.text.y = element_text(size=9, face="bold")) +
+  theme(strip.text.x = element_text(size=14, face="bold"),
+        strip.text.y = element_text(size=14, face="bold")) +
   theme(legend.position = "bottom") +
+  theme(legend.text=element_text(size=10)) +
   labs(title ="Coefficient estimate ranges by model for 1987 cohorts", x = "Age Group", y = "Estimated Coefficient")  
 
-ggsave("graphics/plot4.pdf", plotG, dpi = 500, width = 9, height = 18)
+ggsave("graphics/plot4.pdf", plotG, dpi = 300, width = 9, height = 18)
 
 # 
 # ggplot(GEN_Y, aes(x = Var, y = Coef)) + #+ theme_bw() + geom_linerange(alpha=0.3) +
